@@ -1,9 +1,12 @@
 <template>
   <div>
-    <center><h1>Pokémons</h1></center>
+    <header class="header">
+     <h1 class="titulo">Pokémons</h1>
+    <input type="text" class="search-input" v-model="searchTerm" placeholder="Buscar pelo nome..." />
+    </header>
 
     <div class="card-container">
-      <div class="card" v-for="pokemon in pokemons" :key="pokemon.name" @click="openModal(pokemon)">
+      <div class="card" v-for="pokemon in filteredPokemons" :key="pokemon.name" @click="openModal(pokemon)">
         <img :src="getPokemonImage(pokemon.url)" :alt="pokemon.name" />
         <h2>{{ capitalize(pokemon.name) }}</h2>
       </div>
@@ -57,20 +60,25 @@
 
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 
 const pokemons = ref([])
 const showModal = ref(false)
 const detailedPokemon = ref(null)
 const description = ref('')
+const searchTerm = ref('')
+
+const filteredPokemons = computed(() =>
+  pokemons.value.filter(p => p.name.toLowerCase().includes(searchTerm.value.toLowerCase()))
+)
 
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 async function fetchPokemons() {
-  const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1000')
+  const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=10000')
   const data = await res.json()
   pokemons.value = data.results
 }
@@ -113,18 +121,31 @@ onMounted(() => {
 </script>
 
 <style>
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0f4f8;
+  background: #fce15d;
   margin: 0;
   padding: 2rem 1rem;
-  color: #333;
+  color: #2c3e50;
 }
 
-h1 {
-  font-weight: 700;
+.header {
+  background: linear-gradient(to right, #e53935, #f44336);
+  padding: 2rem 1rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   margin-bottom: 2rem;
-  color: #2c3e50;
+  border-radius: 0 0 20px 20px;
+}
+
+.titulo {
+  color: #fff;
+  font-size: 2.8rem;
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 2px #000;
 }
 
 .card-container {
@@ -135,14 +156,14 @@ h1 {
 }
 
 .card {
-  background: white;
+  background: #e3f2fd;
   border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-  width: 140px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  width: 150px;
   padding: 1rem 0.5rem;
   text-align: center;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -150,7 +171,8 @@ h1 {
 
 .card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+  background-color: #bbdefb;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
 
 .card img {
@@ -162,10 +184,9 @@ h1 {
 .card h2 {
   font-size: 1.1rem;
   text-transform: capitalize;
-  color: #34495e;
+  color: #1565c0;
   margin: 0;
 }
-
 
 .modal-overlay {
   position: fixed;
@@ -179,7 +200,7 @@ h1 {
 }
 
 .modal-content {
-  background: white;
+  background: #ffffff;
   border-radius: 20px;
   max-width: 400px;
   width: 100%;
@@ -204,7 +225,7 @@ h1 {
   font-weight: 700;
   font-size: 2rem;
   text-transform: capitalize;
-  color: #27ae60;
+  color: #e53935;
 }
 
 .close-btn {
@@ -231,11 +252,10 @@ h1 {
   margin-bottom: 0.75rem;
   font-weight: 600;
   font-size: 1.2rem;
-  border-bottom: 2px solid #27ae60;
+  border-bottom: 2px solid #e53935;
   padding-bottom: 0.2rem;
   color: #34495e;
 }
-
 
 .types {
   display: flex;
@@ -253,25 +273,23 @@ h1 {
   user-select: none;
 }
 
-
 .type.grass { background-color: #78C850; }
 .type.poison { background-color: #A040A0; }
 .type.fire { background-color: #F08030; }
 .type.water { background-color: #6890F0; }
 .type.bug { background-color: #A8B820; }
 .type.normal { background-color: #A8A878; }
-.type.electric { background-color: #F8D030; color: #555; }
-.type.ground { background-color: #E0C068; color: #555; }
+.type.electric { background-color: #F8D030; color: #444; }
+.type.ground { background-color: #E0C068; color: #444; }
 .type.fairy { background-color: #EE99AC; }
 .type.fighting { background-color: #C03028; }
 .type.psychic { background-color: #F85888; }
 .type.rock { background-color: #B8A038; }
 .type.ghost { background-color: #705898; }
-.type.ice { background-color: #98D8D8; color: #555; }
+.type.ice { background-color: #98D8D8; color: #444; }
 .type.dragon { background-color: #7038F8; }
 .type.dark { background-color: #705848; }
-.type.steel { background-color: #B8B8D0; color: #555; }
-
+.type.steel { background-color: #B8B8D0; color: #333; }
 
 .stats {
   list-style: none;
@@ -297,15 +315,16 @@ h1 {
 
 .stat-fill {
   height: 100%;
-  background-color: #27ae60;
+  background: linear-gradient(to right, #ffd700, #f44336);
   border-radius: 4px 0 0 4px;
 }
-
 
 .description p {
   font-style: italic;
   color: #555;
-  line-height: 1.4;
+  line-height: 1.5;
   margin: 0;
 }
+
+
 </style>
