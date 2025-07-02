@@ -48,7 +48,7 @@
 
         <section class="info-section description">
           <h3>Descrição</h3>
-          <p>{{ description }}</p>
+          <p>{{ description }}</p><!--não tem a descrição-->
         </section>
       </div>
     </div>
@@ -56,7 +56,9 @@
 </template>
 
 <script setup>
+
 import { ref, onMounted } from 'vue'
+
 
 const pokemons = ref([])
 const showModal = ref(false)
@@ -164,7 +166,7 @@ h1 {
   margin: 0;
 }
 
-/* Modal */
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -234,7 +236,7 @@ h1 {
   color: #34495e;
 }
 
-/* Types */
+
 .types {
   display: flex;
   gap: 0.5rem;
@@ -251,7 +253,7 @@ h1 {
   user-select: none;
 }
 
-/* Cores dos tipos (exemplos) */
+
 .type.grass { background-color: #78C850; }
 .type.poison { background-color: #A040A0; }
 .type.fire { background-color: #F08030; }
@@ -270,7 +272,7 @@ h1 {
 .type.dark { background-color: #705848; }
 .type.steel { background-color: #B8B8D0; color: #555; }
 
-/* Stats */
+
 .stats {
   list-style: none;
   padding: 0;
@@ -299,7 +301,7 @@ h1 {
   border-radius: 4px 0 0 4px;
 }
 
-/* Descrição */
+
 .description p {
   font-style: italic;
   color: #555;
